@@ -10,8 +10,8 @@ public class InterfaceDAO {
 //	 Connection conn; // 연결 객체
 //	PreparedStatement ps; // 실행 객체
 //	ResultSet rs ; //결과 객체(표 sql dev 밑에 질의결과)
-	public static class connector{
-		static Connection conn;// 상속했는데 스태틱이 필요함?
+	public class connector{
+		 Connection conn;// 상속했는데 스태틱이 필요함?
 		protected static void connect() {
 			String url = "jdbc:oracle:thin:@118.40.91.135:1521:xe";
 			String user = "ATEAM";
@@ -37,6 +37,8 @@ public class InterfaceDAO {
 		public int selectMode();// 로그인 후 모드 선택,로그아웃, 점수출력, 레시피추가, 게임시작 
 		public void rogout();// 로그아웃
 		public void printScore();// db에있는 점수 정보 출력 , 등수, 계급, 점수, 닉네임
+		public void startGame();// 게임 시작
+		public int selectLevel();// 난이도 선택 상 중 하+ 최상?
 	}
 	public interface login{
 		public boolean idCheck(); // 아이디 있는지 체크
@@ -56,8 +58,8 @@ public class InterfaceDAO {
 	}
 	
 	public interface aboutPlay{
-		public void startGame();// 게임 시작
-		public int selectLevel();// 난이도 선택 상 중 하+ 최상?
+		
+	
 		public void printRandomRecipe();// 배열중 랜덤하게, 순서 섞어서 레시피 출력, 두개로 나눌수도?,(=문제출제) 화면 올려버리기 필요
 		public void userInput();// 입력값받기
 		public boolean checkAnswer();// 정답체크
