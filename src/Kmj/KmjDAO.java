@@ -6,7 +6,7 @@ import Main.InterfaceDAO;
 import Main.InterfaceDAO.connector;
 import Main.InterfaceDAO.main;
 
-public class KmjDAO extends connector {
+public class KmjDAO extends connector  {
 
 	
 	
