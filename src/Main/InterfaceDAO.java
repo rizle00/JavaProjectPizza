@@ -5,6 +5,7 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 public class InterfaceDAO {
 //	 Connection conn; // 연결 객체
@@ -16,16 +17,16 @@ public class InterfaceDAO {
 			String url = "jdbc:oracle:thin:@118.40.91.135:1521:xe";
 			String user = "ATEAM";
 			String password = "ATEAM1";
-			try {
+//			try {
 				try {
 					conn = DriverManager.getConnection(url, user, password);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
-				PreparedStatement ps = conn.prepareStatement("");
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
+//				PreparedStatement ps = conn.prepareStatement("");
+//			} catch (SQLException e) {
+//				e.printStackTrace();
+//			}
 		}// db 접속
 		protected void disconnect() {
 			try {
@@ -63,7 +64,7 @@ public class InterfaceDAO {
 	
 	public  interface AboutPlay{
 		public void printRandomRecipe();// 배열중 랜덤하게, 순서 섞어서 레시피 출력, 두개로 나눌수도?,(=문제출제) 화면 올려버리기 필요
-		public void userInput();// 입력값받기
+		public String userInput();// 입력값받기
 		public boolean checkAnswer();// 정답체크
 		public void printCorrect();//맞을때 점수 누적 및 출력사항
 		public boolean printInCorrect();// 틀렸음을 알림, 3번 중 몇번째 틀렸는지 3번 틀리면 사망
@@ -71,6 +72,7 @@ public class InterfaceDAO {
 		public void printRemain();//3번까지 틀린경우, 목숨 잃음 알림, 남은목숨 알림, 누적점수 알림
 		public void updateScore();// 접속, 누적점수 업데이트, 해제
 		public void gameEnd();// 게임종료 알림, 점수 출력, 다시 셀렉트모드로
+		ArrayList<CookDTO> printRandomRecipe(ArrayList<CookDTO> cDtos);
 		
 	}
 	
