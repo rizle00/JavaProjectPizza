@@ -24,6 +24,12 @@ public class DTO {
 		return id;
 	}
 
+	public DTO(String id, String pw) {
+		super();
+		this.id = id;
+		this.pw = pw;
+	}
+
 	public void setId(String id) {
 		this.id = id;
 	}
