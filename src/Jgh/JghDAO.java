@@ -1,7 +1,11 @@
 package Jgh;
 
 import java.sql.Connection;
+import java.sql.DriverManager;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Scanner;
 
 import Main.InterfaceDAO;
@@ -9,7 +13,6 @@ import Main.InterfaceDAO.connector;
 
 public class JghDAO {
 	Main.InterfaceDAO.main idao = new InterfaceDAO.main() {
-
 		@Override // 로그인 or 종료 선택 + 시작화면임을 표시필요
 		public void startGame() { //게임시작
 			
@@ -83,8 +86,27 @@ public class JghDAO {
 
 		@Override
 		public void printScore() {// db에있는 점수 정보 출력 , 등수, 계급, 점수, 닉네임
-
+			Connection conn = null; // 이거 널 들어가도되는지 모르겟는데요 
+			String url = "jdbc:oracle:thin:@118.40.91.135:1521:xe";
+			String user = "ATEAM";
+			String password = "ATEAM1";
+			try {
+				ArrayList<Main.DTO> list = new ArrayList<>();
+				
+				conn = DriverManager.getConnection(url, user, password);
+				PreparedStatement ps = conn.prepareStatement("select nickname, score from member where score is not null order by score desc ;");
+				ResultSet rs = ps.executeQuery();
+				while(rs.next()) {
+					System.out.println(rs.getString("nickname")+ "  " + rs.getString("score") );
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+			try {
+				conn.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
 		}
 	};
-
 }

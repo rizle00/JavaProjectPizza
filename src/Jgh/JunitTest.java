@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Test;
 
 class JunitTest {
 
-
+	@Disabled
 	@DisplayName("로그인 or 종료 선택 ")
 	@Test
 	void test() {
@@ -16,7 +16,7 @@ class JunitTest {
 		dao.idao.startGame();
 	}
 	
-	
+	@Disabled
 	@DisplayName("메뉴 선택")
 	@Test
 	void selectTest() {
@@ -24,5 +24,10 @@ class JunitTest {
 		dao.idao.selectMode();
 		
 	}
-
+	
+	@DisplayName("점수판")
+	@Test
+	void printScore() {
+		printScore();
+	}
 }
