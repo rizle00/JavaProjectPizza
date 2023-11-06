@@ -1,11 +1,12 @@
 package Main;
 
-public class DTO {
+public class MemberDTO {
 
 	private String id, pw, nickname, gender, createdDay, address;
 	private int score, ranking;
+
 	
-	DTO(String id, String pw, String nickname, String gender, String createdDay, String address, int score, int ranking) {
+	MemberDTO(String id, String pw, String nickname, String gender, String createdDay, String address, int score, int ranking) {
 		this.id = id;
 		this.pw = pw;
 		this.nickname = nickname;
@@ -22,6 +23,7 @@ public class DTO {
 //	public class recipeDTO{ DAO에서 배열 생성
 //		private String name;
 //	}
+
 
 	public int getScore() {
 		return score;

@@ -10,7 +10,7 @@ public class InterfaceDAO {
 //	 Connection conn; // 연결 객체
 //	PreparedStatement ps; // 실행 객체
 //	ResultSet rs ; //결과 객체(표 sql dev 밑에 질의결과)
-	public class connector{
+	public static class Connector{
 		 protected Connection conn;// 상속했는데 스태틱이 필요함?
 		protected void connect() {
 			String url = "jdbc:oracle:thin:@118.40.91.135:1521:xe";
@@ -20,7 +20,6 @@ public class InterfaceDAO {
 				try {
 					conn = DriverManager.getConnection(url, user, password);
 				} catch (Exception e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 				PreparedStatement ps = conn.prepareStatement("");
@@ -37,7 +36,7 @@ public class InterfaceDAO {
 		}// db 접속 해제
 		
 	}
-	public interface main{
+	public interface Main{
 		public void select();//로그인, 종료 선택 + 시작화면임을 표시필요
 		public int selectMode();// 로그인 후 모드 선택,로그아웃, 점수출력, 레시피추가, 게임시작 
 		public void rogout();// 로그아웃
@@ -45,7 +44,7 @@ public class InterfaceDAO {
 		public void startGame();// 게임 시작
 		public int selectLevel();// 난이도 선택 상 중 하+ 최상?
 	}
-	public interface login{
+	public interface Login{
 		public boolean idCheck(); // 아이디 있는지 체크
 		public void resister(); //회원가입
 		public boolean login(); // 로그인
@@ -53,7 +52,7 @@ public class InterfaceDAO {
 		public void deleteId(); // 회원탈퇴
 	}
 	
-	public interface aboutRecipe{
+	public interface AboutRecipe{
 		public void printRecipe();// 있는 레시피 출력
 		public void addRecipe();// 중복 예외 처리 필요, db에서 기본키지정
 		public void modifyRecipe();// 레시피 수정
@@ -62,7 +61,7 @@ public class InterfaceDAO {
 		
 	}
 	
-	public interface aboutPlay{
+	public  interface AboutPlay{
 		public void printRandomRecipe();// 배열중 랜덤하게, 순서 섞어서 레시피 출력, 두개로 나눌수도?,(=문제출제) 화면 올려버리기 필요
 		public void userInput();// 입력값받기
 		public boolean checkAnswer();// 정답체크
