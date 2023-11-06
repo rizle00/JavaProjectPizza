@@ -1,6 +1,7 @@
 package Jgh;
 
 import java.sql.Connection;
+import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.util.Scanner;
 
@@ -83,7 +84,7 @@ public class JghDAO {
 
 		@Override
 		public void printScore() {// db에있는 점수 정보 출력 , 등수, 계급, 점수, 닉네임
-
+			
 		}
 	};
 
