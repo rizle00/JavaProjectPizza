@@ -11,13 +11,18 @@ public class InterfaceDAO {
 //	PreparedStatement ps; // 실행 객체
 //	ResultSet rs ; //결과 객체(표 sql dev 밑에 질의결과)
 	public class connector{
-		 Connection conn;// 상속했는데 스태틱이 필요함?
-		protected static void connect() {
+		 protected Connection conn;// 상속했는데 스태틱이 필요함?
+		protected void connect() {
 			String url = "jdbc:oracle:thin:@118.40.91.135:1521:xe";
 			String user = "ATEAM";
 			String password = "ATEAM1";
 			try {
-				conn = DriverManager.getConnection(url, user, password);
+				try {
+					conn = DriverManager.getConnection(url, user, password);
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 				PreparedStatement ps = conn.prepareStatement("");
 			} catch (SQLException e) {
 				e.printStackTrace();
@@ -58,8 +63,6 @@ public class InterfaceDAO {
 	}
 	
 	public interface aboutPlay{
-		
-	
 		public void printRandomRecipe();// 배열중 랜덤하게, 순서 섞어서 레시피 출력, 두개로 나눌수도?,(=문제출제) 화면 올려버리기 필요
 		public void userInput();// 입력값받기
 		public boolean checkAnswer();// 정답체크
