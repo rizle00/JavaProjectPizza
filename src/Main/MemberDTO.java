@@ -1,16 +1,32 @@
 package Main;
 
-public class DTO {
+public class MemberDTO {
 
 	private String id, pw, nickname, gender, createdDay, address;
+	private int score, chance=3;
+
 	
-	DTO(String id, String pw, String nickname, String gender, String createdDay, String address) {
+
+
+	public int getChance() {
+		return chance;
+	}
+
+
+	public void setChance(int chance) {
+		this.chance = chance;
+	}
+
+
+	MemberDTO(String id, String pw, String nickname, String gender, String createdDay, String address, int score) {
 		this.id = id;
 		this.pw = pw;
 		this.nickname = nickname;
 		this.gender = gender;
 		this.createdDay = createdDay;
 		this.address = address;
+		this.score = score;
+//		this.ranking = ranking;
 	}
 //	public class memberDTO{
 //		
@@ -18,6 +34,28 @@ public class DTO {
 //	
 //	public class recipeDTO{ DAO에서 배열 생성
 //		private String name;
+//	}
+
+
+	public MemberDTO() {
+		// TODO Auto-generated constructor stub
+	}
+
+
+	public int getScore() {
+		return score;
+	}
+
+	public void setScore(int score) {
+		this.score = score;
+	}
+
+//	public int getRanking() {
+//		return ranking;
+//	}
+//
+//	public void setRanking(int ranking) {
+//		this.ranking = ranking;
 //	}
 
 	public String getId() {
