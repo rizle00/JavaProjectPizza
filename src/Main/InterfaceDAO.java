@@ -73,7 +73,7 @@ public class InterfaceDAO {
 		public void addRecipe();// 중복 예외 처리 필요, db에서 기본키지정
 		public void modifyRecipe();// 레시피 수정
 		public void deleteRecipe();// 레시피 삭제
-		public void inputData();// 레시피 db에서 불러와서 인덱스에 점수 입력 처리
+//		public void inputData();// 레시피 db에서 불러와서 인덱스에 점수 입력 처리
 		
 	}
 	
