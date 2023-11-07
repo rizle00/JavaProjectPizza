@@ -3,10 +3,22 @@ package Main;
 public class MemberDTO {
 
 	private String id, pw, nickname, gender, createdDay, address;
-	private int score, ranking;
+	private int score, chance=3;
 
 	
-	MemberDTO(String id, String pw, String nickname, String gender, String createdDay, String address, int score, int ranking) {
+
+
+	public int getChance() {
+		return chance;
+	}
+
+
+	public void setChance(int chance) {
+		this.chance = chance;
+	}
+
+
+	MemberDTO(String id, String pw, String nickname, String gender, String createdDay, String address, int score) {
 		this.id = id;
 		this.pw = pw;
 		this.nickname = nickname;
@@ -14,7 +26,7 @@ public class MemberDTO {
 		this.createdDay = createdDay;
 		this.address = address;
 		this.score = score;
-		this.ranking = ranking;
+//		this.ranking = ranking;
 	}
 //	public class memberDTO{
 //		
@@ -25,6 +37,11 @@ public class MemberDTO {
 //	}
 
 
+	public MemberDTO() {
+		// TODO Auto-generated constructor stub
+	}
+
+
 	public int getScore() {
 		return score;
 	}
@@ -33,13 +50,13 @@ public class MemberDTO {
 		this.score = score;
 	}
 
-	public int getRanking() {
-		return ranking;
-	}
-
-	public void setRanking(int ranking) {
-		this.ranking = ranking;
-	}
+//	public int getRanking() {
+//		return ranking;
+//	}
+//
+//	public void setRanking(int ranking) {
+//		this.ranking = ranking;
+//	}
 
 	public String getId() {
 		return id;
