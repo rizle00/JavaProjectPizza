@@ -2,10 +2,7 @@ package Main;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.Random;
 import java.util.Scanner;
 
@@ -63,11 +60,12 @@ public class InterfaceDAO {
 		public int selectLevel();// 난이도 선택 상 중 하+ 최상?
 	}
 	public interface Login{
-		public boolean idCheck(); // 아이디 있는지 체크
+		public String idCheck(); // 아이디 있는지 체크
 		public void resister(); //회원가입
 		public boolean login(); // 로그인
 		public void modifyInfo(); // 개인정보 수정
 		public void deleteId(); // 회원탈퇴
+//		void resister(String id, String pw, String nickName, String gender, String adress);
 	}
 	
 	public interface AboutRecipe{
