@@ -18,7 +18,7 @@ public class MemberDTO {
 	}
 
 
-	MemberDTO(String id, String pw, String nickname, String gender, String createdDay, String address, int score) {
+	public MemberDTO(String id, String pw, String nickname, String gender, String createdDay, String address, int score) {
 		this.id = id;
 		this.pw = pw;
 		this.nickname = nickname;
@@ -28,6 +28,11 @@ public class MemberDTO {
 		this.score = score;
 //		this.ranking = ranking;
 	}
+	public MemberDTO(String id, String pw) {
+		this.id = id;
+		this.pw = pw;
+	}
+
 //	public class memberDTO{
 //		
 //	}
@@ -62,12 +67,7 @@ public class MemberDTO {
 		return id;
 	}
 
-	public DTO(String id, String pw) {
-		super();
-		this.id = id;
-		this.pw = pw;
-	}
-
+	
 	public void setId(String id) {
 		this.id = id;
 	}

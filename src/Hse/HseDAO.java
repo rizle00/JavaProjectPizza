@@ -1,135 +1,201 @@
 package Hse;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Scanner;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
-import Main.InterfaceDAO.login;
+import Main.InterfaceDAO.Common;
+import Main.InterfaceDAO.Login;
+import Main.MemberDTO;
 
-public class HseDAO {
+public class HseDAO extends Common implements Login {
 
-	Scanner str = new Scanner(System.in);
+	MemberDTO mDto = new MemberDTO();
 
-	Main.DTO dto = new 
-		
-	Main.InterfaceDAO.login =new login() {
-		
-		
-		@Override
-		public boolean login() {
-			String id = "a";
-			String pw = "b";
+	@Override
+	public String idCheck() {// 아이디 있는지 체크
+		connect();
+		while (true) {
 
-			System.out.println("로그인 해주세요");
-			System.out.println("아이디입력 : ");
-			String id = str.nextLine();
-			System.out.println("비밀번호입력 : ");
-			String pw = str.nextLine();
+			System.out.println("아이디를 입력해주세요");
+			String existId = userInput();
+			try {
+				PreparedStatement ps = conn.prepareStatement("select * from member where id=?");
+				ps.setString(1, existId);
+				ResultSet rs = ps.executeQuery();
+				if (rs.next()) {
 
-			
-			
-			while (true) {
+					mDto = new MemberDTO(rs.getString("id"), rs.getString("pw"), rs.getString("nickname"),
+							rs.getString("gender"), rs.getString("createdDay"), rs.getString("address"),
+							rs.getInt("score"));
 
-				if (Main.dto.getId().equals(id) && Main.dto.getId().equals(pw)) {
-					System.out.println("로그인 성공!!! ");
-					return true;
-
+					System.out.println("비밀번호를 입력해 주세요");
+					String pw = userInput();
+					disconnect();
+					return pw;
 				} else {
-					System.out.println("아이디&비밀번호 오류!다시 입력바랍니다!!!");
+					System.out.println("존재하지않는 아이디!");
+					System.out.println("회원가입을 원하시면 1, 종료는 0을 눌러주세요");
+					String uInput = userInput();
+					disconnect();
+					return uInput;
 				}
-				return false;
+
+			} catch (SQLException e) {
+				e.printStackTrace();
 			}
 		}
+	}
+
+	@Override
+	public boolean login() {//로그인
 	
-		
-		@Override
-		public void resister(Main.DTO dto) {//회원가입
-			
-			ArrayList<String> names = new ArrayList<String>();
-			ArrayList<String> ids = new ArrayList<String>();
-			ArrayList<String> phones = new ArrayList<String>();
-			ArrayList<String> birthdays = new ArrayList<String>();
-			ArrayList<String> adressd = new ArrayList<String>();
-		
-			Scanner str = new Scanner(System.in);
-			while (true) {
-				System.out.println("회원가입은 1 !, 종료는 -1을 누르세요 ");
-				int choice = sc.nextInt();
-			if (getIntByScan().equals(1)) {
-					
-			    System.out.println("이름 입력 : ");
-			    String id = sc.next();
-			
-				System.out.println("아이디 입력 : ");
-				String id = sc.next();
-			
-
-				System.out.println("비밀번호 입력 : ");
-				String pw = sc.next();
-				
-
-				System.out.println("성별 입력 : ");
-				String nickname = sc.next();
-				
-				System.out.println("생년월일 입력 : ");
-				String nickname = sc.next();
-				
-				System.out.println("주소 입력 : ");
-				String nickname = sc.next();
-								
-
-				
+		while (true) {
+			String pw = idCheck();
+			if (pw.equals(mDto.getPw())) {
+				System.out.println("로그인 완료!!!");
+				// selectMode method
+				return true;
 			} else {
-				System.out.println("");
-		
+				System.out.println("아이디&비번오류!! 다시 로그인해주세요!!!");
+			}
 		}
-			
-		
-			
-			
-			
+	}
+
 	@Override
-	public void modifyInfo(Main.DTO dto) {// 개인정보 수정
-		ArrayList<String> list = new ArrayList<>();
-		
-		list.add(1)=name;
-		list.add(2)=id;
-		list.add(3)=phone;       //
-		list.add(4)=birthday;
-		list.add(5)=adress;
-		
-		list.remove(0);
+	public void resister() {
+		// 회원가입
 	
-		for (int i = 0; i < list.size(); i++) {
-			System.out.println(i+ ":"+ list.get());
+		connect();
+		String id,  pw,  nickName,  gender, adress;
+		System.out.println("회원가입!!!");
+		System.out.println("아디디 입력 : ");
+		String inId = userInput();
+
+		System.out.println("비밀번호 입력 : ");
+		String inPw = userInput();
+
+		System.out.println("닉네임 입력 : ");
+		String inNickName = userInput();
+
+		System.out.println("성별 입력 : ");
+		String inGender = userInput();
+
+		System.out.println("주소 입력 : ");
+		String inAdress = userInput();
+
+		try {
+			PreparedStatement ps = conn
+					.prepareStatement("INSERT INTO MEMBER (ID, PW, NICKNAME,GENDER, ADDRESS) VALUES (?,?,?,?,?)");
+			ps.setString(1, inId);
+			ps.setString(2, inPw);
+			ps.setString(3, inNickName);
+			ps.setString(4, inGender);
+			ps.setString(5, inAdress);
+
+			int result = ps.executeUpdate();
+			System.out.println(conn.getAutoCommit());
+
+			System.out.println(result);
+
+		} catch (SQLException e) {
+
+			e.printStackTrace();
 		}
+
+	}
+
+	@Override
+	public void modifyInfo() {// 개인정보수정
+
+		System.out.println("변경하실 회원정보를 입력해주세요");
+		
+		System.out.println("1. 비밀번호 변경");
+		System.out.println("2. 닉네임 변경");
+		System.out.println("3. 성별 변경");
+		System.out.println("4. 주소 변경");
+		
+		String change = null;		//변경할 행의 컬럼이름!
+		String str = null;          //변경될 컬럼의값
+		String choice = userInput();
+
+		while (true) {
+
+			switch (choice) {
 			
+				
+			case "1":
+				System.out.println("비밀번호 변경 :");
+				change = "pw";
+				str = userInput();
+				break;
 
-	}
+			case "2":
+				System.out.println("닉네임 변경 :");
+				change = "nickname";
+				str = userInput();
+				break;
+			case "3":
+				System.out.println("성별 변경 :");
+				change = "gender";
+				str = userInput();
+				break;
+			case "4":
+				System.out.println("주소 변경 :");
+				change = "address";
+				str = userInput();
+				break;
 
-	
+			default:
+				System.out.println("다시 입력해주세요");
+				break;
+			}
+			
+			
+			try {
+				PreparedStatement ps = conn
+						.prepareStatement("UPDATE MEMBER SET ? = ? WHERE ID=?");
+				ps.setString(1, change);
+				ps.setString(2, str);
+				ps.setString(3, mDto.getId());    //기존의것!(변경 컬럼의 내용)
 
+				int result = ps.executeUpdate();
+				System.out.println(conn.getAutoCommit());
 
-	@Override
-	public boolean idCheck() {// 아이디 있는지 체크
-		System.out.println("아이디를 입력해주세요");
-		Scanner str = new Scanner(System.in);
-		String ss = str.nextLine();
+				System.out.println(result);
 
-		if (Main.dto.getId().equals(ss)) {
-			System.out.println("존재하는  아이디입니다");
-            System.out.println("다른 아이디로 입력해주세요");
-            return true;
-		} else {
-			System.out.println("존재하지 않는 아이디입니다.");	
+			} catch (SQLException e) {
+
+				e.printStackTrace();
+			}
+			
+			
+			
+			System.out.println("회원정보가 변경되었습니다.");
 		}
-		return false;
+
 	}
 
 	@Override
-	public void deleteId() {// 회원탈퇴
-		// TODO Auto-generated method stub
+	public void deleteId() {//삭제
+		
+		try {
+			PreparedStatement ps = conn.prepareStatement("DELETE FROM MEMBER WHERE ID = ? AND PW = ?");
 
+			ps.setString(1, mDto.getId());
+			ps.setString(2, mDto.getPw());
+			int result = ps.executeUpdate();
+			System.out.println(result);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+			
+		}
 	}
-};
 
+
+
+
+		
+	}
