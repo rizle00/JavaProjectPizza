@@ -24,6 +24,9 @@ public class RecipeDTO {
 	public void setCookNum(int cookNum) {
 		this.cookNum = cookNum;
 	}
+	
+
+	
 	public String getIngredient() {
 		return ingredient;
 	}
