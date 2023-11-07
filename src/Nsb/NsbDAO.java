@@ -1,97 +1,123 @@
 package Nsb;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
-public class NsbDAO {
-private Connection conn;
+import Main.InterfaceDAO.Connector;
+import Main.MemberDTO;
+import Main.RecipeDTO;
+
+public class NsbDAO extends Connector{
 	
-	public boolean isConnection() {
-		String url = "jdbc:oracle:thin:@localhost:1521:xe";
-		String user = "hanul";
-		String password = "0000";
+	// 레시피 목록 출력
+	public ArrayList<RecipeDTO> printRecipe(){
+		ArrayList<RecipeDTO> list = new ArrayList<>();
 		try {
-			conn = DriverManager.getConnection(url, user, password);
-			if (!conn.isClosed()) {
-				return true;
+			PreparedStatement ps = conn.prepareStatement(" SELECT * FROM RECIPE_INFO ");
+			ResultSet rs = ps.executeQuery();
+			while(rs.next()) {
+				RecipeDTO dto = new RecipeDTO(rs.getInt("recipeNo"),rs.getInt("cookNum"), rs.getString("ingredient"));
+				list.add(dto);
 			}
-
-		} catch (SQLException e) {
+		}catch(SQLException e) {
 			e.printStackTrace();
-		}
-		return false;
-	}
-
-	// 통신 닫기
-	public void closeConnection() {
-		if (conn != null) {
-			try {
-				conn.close();
-			} catch (SQLException e) {
-				e.printStackTrace();
-			}
-		}
-	}
-	
-	
-	// 있는 레시피 출력 , 레시피디티오 목록정보를 다 불러 , 레시피 목록 조회
-	public ArrayList<RecipeDTO> printRecipe() {
-		ArrayList<RecipeDTO> list = new ArrayList<>(); // 레시피 리스트
-		if(isConnection()) {
-			try {
-				PreparedStatement ps = conn.prepareStatement(" SELECT * FROM RECIPE ");// db연결
-				ResultSet rs = ps.executeQuery();
-				while(rs.next()) {
-					RecipeDTO dto = new RecipeDTO(0,0,rs.getString("ingredient"));
-					list.add(dto);
-				}
-			}catch(SQLException e) {
-				e.printStackTrace();
-			}
 		}
 		return list;
 	}
 	
-	// 중복 예외 처리 필요 , db에서 기본키 지정
-	public void addRecipe() {
-		
-	}
-	
-	// 레시피 수정
-	public void modifyRecipe(RecipeDTO dto) {
-		if(isConnection()) {
-			try {
-				PreparedStatement ps = conn.prepareStatement(""); //db 연결 후 수정
-				ps.setString(0, null);//레시피 수정 재료 이름만 가능.
-				int result = ps.executeUpdate();
-			}catch (SQLException e) {
-				e.printStackTrace();
-			}finally {
-				closeConnection();
-			}
-		}
-	}
-	
-	// 레시피 삭제
-	public void deleteRecipe(RecipeDTO dto) {
-		if (isConnection()) {
-			try {
-				PreparedStatement ps = conn.prepareStatement(""); // db 연결 후 수정
-				ps.setString(0, null);// 레시피 재료이름만 삭제
-				int result = ps.executeUpdate();
-			} catch (SQLException e) {
-				e.printStackTrace();
-			} finally {
-				closeConnection();
-			}
-		}
-	}
-	// 레시피 db에서 불러와서 인덱스에 점수 입력 처리
-	public void inputData() {
-		
-	}
+	// 레시피 출력
+//    public void printRecipe(RecipeDTO dto) {
+//        try (
+//             PreparedStatement ps = conn.prepareStatement("SELECT * FROM RECIPE_INFO WHERE id = ?")) {
+//            ps.setInt(1, dto.getRecipeNo());
+//            ps.setInt(1, dto.getCookNum());
+//            ps.setString(1,dto.getIngredient());
+//            try (ResultSet rs = ps.executeQuery()) {
+//                if (rs.next()) {
+//                    System.out.println("RecipeNo: " + rs);
+//                    System.out.println("CookNum: " + rs);
+//                    System.out.println("Ingredient: " + rs);
+//                } else {
+//                    System.out.println("레시피를 찾을 수 없습니다.");
+//                }
+//            }
+//        } catch (SQLException e) {
+//            e.printStackTrace();
+//        }
+//    }
+    
+    // 레시피 중복
+    public boolean addRecipe(RecipeDTO dto) {
+    	// exists 서브쿼리를 통해 조건에 해당하는 컬럼이 존재하는지를 반환하는 형태
+    	// 특정 조건의 일치 여부에 대해 true / false 반환
+    	// exists = 해당 서브쿼리에서 값이 있는지만 확인하는
+        boolean exists = false; 
+        try (
+            PreparedStatement ps = conn.prepareStatement("SELECT COUNT(*) FROM RECIPE WHERE ingredient = ?")) {
+        	ps.setInt(1, dto.getRecipeNo());
+        	ps.setInt(1, dto.getCookNum());       	
+        	ps.setString(1, dto.getIngredient());
+            try (ResultSet resultSet = ps.executeQuery()) {
+                if (resultSet.next()) {
+                    int count = resultSet.getInt(1);
+                    exists = count > 0; // 해당 조건에 해당하는 레코드가 있으면 true 할당 . 중복확인
+                }else {
+                	System.out.println("중복된 레시피 입니다.");
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return exists;
+    }
+
+    
+    // 레시피 수정
+    public void updateRecipe(RecipeDTO dto) {
+        try (
+             PreparedStatement ps = conn.prepareStatement("UPDATE RECIPE SET cooknum = ?, recipeno = ?, ingredient = ? WHERE id = ?")) {
+            	 ps.setInt(1, dto.getCookNum());
+            	 ps.setInt(1, dto.getRecipeNo());
+            	 ps.setString(1,dto.getIngredient());
+            	 ps.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+    
+    // 레시피 삭제
+    public void deleteRecipe(RecipeDTO dto) {
+        try (
+        	PreparedStatement ps = conn.prepareStatement("DELETE FROM RECIPE WHERE id = ?")) {
+        	ps.setInt(1, dto.getRecipeNo());
+        	ps.setInt(1, dto.getCookNum());
+        	ps.setString(1, dto.getIngredient());
+        	ps.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+    
+    // 레시피 db 땡겨와서 인덱스에 점수 입력 처리
+    public void inputData(RecipeDTO recipedto , MemberDTO memberdto) {
+        try (
+             PreparedStatement ps = conn.prepareStatement("")) {
+        	ps.setInt(1, recipedto.getRecipeNo());
+        	ps.setInt(1, recipedto.getCookNum());
+        	ps.setString(1, recipedto.getIngredient());
+        	ps.setInt(1, memberdto.getScore());
+        	ps.executeUpdate();
+            System.out.println("점수입력 : " + memberdto.getScore());
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+
 }
+
+	
+
