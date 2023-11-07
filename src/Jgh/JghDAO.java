@@ -4,12 +4,13 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Scanner;
-import Main.InterfaceDAO.Connector;
+
+import Main.InterfaceDAO.Common;
 import Main.InterfaceDAO.Main;
 
 
-public class JghDAO extends Connector implements Main {
-	
+public class JghDAO extends Common implements Main {
+	Scanner sc = new Scanner(System.in);
 		@Override 
 		public void startGame() { //게임시작
 			System.out.println("게임을 시작합니다!");
@@ -19,7 +20,7 @@ public class JghDAO extends Connector implements Main {
 		@Override
 		public int selectMode() {// 로그인 후 모드 선택,로그아웃, 점수출력, 레시피추가, 게임시작
 			System.out.println("메뉴를 선택해주세요!");
-			Scanner sc = new Scanner(System.in);
+
 			
 			while (true) {
 				try {
@@ -58,7 +59,6 @@ public class JghDAO extends Connector implements Main {
 		@Override
 		public int selectLevel() {// 난이도 선택 상 중 하+ 최상?
 			while (true) {
-				Scanner sc = new Scanner(System.in);
 				System.out.println();
 				try {
 					System.out.println("난이도 1~3 중 선택해주세요!");
