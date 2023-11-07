@@ -2,21 +2,9 @@ package Main;
 
 public class MemberDTO {
 
-	private String id, pw, nickname, gender, createdDay, address;
-	private int score, chance=3;
-
-	
-
-
-	public int getChance() {
-		return chance;
-	}
-
-
-	public void setChance(int chance) {
-		this.chance = chance;
-	}
-
+	private String id, pw, nickname, gender, createdDay, address, iData;
+	private int score, chance=3, level;
+	private boolean isLogin;
 
 	public MemberDTO(String id, String pw, String nickname, String gender, String createdDay, String address, int score) {
 		this.id = id;
@@ -28,6 +16,42 @@ public class MemberDTO {
 		this.score = score;
 //		this.ranking = ranking;
 	}
+	public int getChance() {
+		return chance;
+	}
+
+
+	public void setChance(int chance) {
+		this.chance = chance;
+	}
+	public int getLevel() {
+		return level;
+	}
+
+
+	public void setLevel(int level) {
+		this.level = level;
+	}
+
+	public String getiData() {
+		return iData;
+	}
+
+
+	public void setiData(String iData) {
+		this.iData = iData;
+	}
+
+
+	public boolean isLogin() {
+		return isLogin;
+	}
+
+
+	public void setLogin(boolean isLogin) {
+		this.isLogin = isLogin;
+	}
+
 	public MemberDTO(String id, String pw) {
 		this.id = id;
 		this.pw = pw;
