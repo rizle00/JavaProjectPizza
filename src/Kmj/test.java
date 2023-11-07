@@ -2,17 +2,19 @@ package Kmj;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.lang.reflect.Array;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Random;
 
 import org.junit.jupiter.api.Test;
 
 import Main.CookDTO;
-import Main.InterfaceDAO.Connector;
 
 class test{
 
@@ -44,19 +46,18 @@ class test{
 		} catch (SQLException e1) {
 			e1.printStackTrace();
 		}
-			System.out.println(cDtos.get(0).getCookName());
 		 return cDtos;
 		}
 	
 
 	@Test
 	void test1() {
+		KmjDAO dao = new KmjDAO();
+//		dao.printRecipes(dao.loadRecipe());
+//		dao.loadLowRecipe(dao.loadRecipe());
+//		dao.printRandomRecipe(dao.loadLowRecipe(dao.loadRecipe()));
+			}
+			
 		
-		ArrayList<CookDTO> cDtos = loadRecipe();
-		System.out.println(cDtos.size());
-//		for (int i = 0; i < cDtos.size(); i++) {
-//			
-//			System.out.println("레시피 이름 : "+cDtos.size());
 		
-	}
 }

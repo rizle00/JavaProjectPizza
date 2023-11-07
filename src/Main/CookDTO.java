@@ -6,15 +6,22 @@ public class CookDTO {
 //	private ArrayList<CookDTO> cDto;
 	
 	private String cookName , createdDate, createdBy;
-	private int cookNum, count;
+	private int cookNum, count, score;
 	public ArrayList<RecipeDTO> recipeList;
 	public CookDTO() {
 	}
-	public CookDTO(String cookName, String createdBy, int cookNum, int count) {
+	public CookDTO(String cookName, String createdBy, int cookNum, int count, int score) {
 		this.cookName = cookName;
 		this.createdBy = createdBy;
 		this.cookNum = cookNum;
 		this.count = count;
+		this.score = score;
+	}
+	public int getScore() {
+		return score;
+	}
+	public void setScore(int score) {
+		this.score = score;
 	}
 	public String getCookName() {
 		return cookName;
