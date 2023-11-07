@@ -56,7 +56,7 @@ public class InterfaceDAO {
 	}
 	public interface Main{
 		public void select();//로그인, 종료 선택 + 시작화면임을 표시필요
-		public int selectMode();// 로그인 후 모드 선택,로그아웃, 점수출력, 레시피추가, 게임시작 
+		public void selectMode();// 로그인 후 모드 선택,로그아웃, 점수출력, 레시피추가, 게임시작 
 		public void rogout();// 로그아웃
 		public void printScore();// db에있는 점수 정보 출력 , 등수, 계급, 점수, 닉네임
 		public void startGame();// 게임 시작
