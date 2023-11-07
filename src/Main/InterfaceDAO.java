@@ -52,8 +52,7 @@ public class InterfaceDAO {
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
-		}// db 접속 해제
-		
+		}// db 접속 해제	
 	}
 	public interface Main{
 		public void select();//로그인, 종료 선택 + 시작화면임을 표시필요

@@ -83,6 +83,7 @@ public class JghDAO extends Common implements Main {
 			while (true) {
 				String tempStr = sc.nextLine();
 				if (tempStr.equals("1")) { // 로그인 창으로
+					//로그인 메소드 자리 
 					selectMode();
 					break;
 				} else if (tempStr.equals("0")) { // 게임종료
