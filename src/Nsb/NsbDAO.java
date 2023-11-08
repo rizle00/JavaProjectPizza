@@ -4,13 +4,11 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Scanner;
 
 import Main.InterfaceDAO.AboutRecipe;
 import Main.InterfaceDAO.Common;
 import Main.CookDTO;
 import Main.MemberDTO;
-import Main.RecipeDTO;
 
 public class NsbDAO extends Common implements AboutRecipe {
 	CookDTO cookDto = new CookDTO();
@@ -127,7 +125,7 @@ public class NsbDAO extends Common implements AboutRecipe {
 
 	// 레시피 수정
 	@Override
-	public void modifyRecipe() {
+	public void deleteRecipe() {
 		String select = null;// 음식이냐 재료냐
 		String select2 =null;// 음식이냐 재료냐2
 		String inputStr =null;
@@ -179,13 +177,46 @@ public class NsbDAO extends Common implements AboutRecipe {
 
 	// 레시피 삭제
 	@Override
-	public void deleteRecipe() {
-		String cookName;
-		String ingredientName;
-		try (PreparedStatement ps = conn.prepareStatement("DELETE FROM RECIPE_INFO WHERE id = ?")) {
-			ps.setInt(1, getRecipeNo());
-			ps.setInt(1, dto.getCookNum());
-			ps.setString(1, dto.getIngredient());
+	public void modifyRecipe() {
+		String select = null;
+		String select2 =null;
+		String inputStr =null;
+		String select3 =null;
+		int inputNum =0 ;
+		System.out.println("---------------------------------------------------------");
+		System.out.println("1 - 음식 이름 삭제  2 - 이전화면으로");
+		int choice = userNum();
+		while(choice!=-10) {
+			switch(choice) {
+			 case 1:
+				 System.out.println("---------------------------------------------------------");
+				 System.out.println("삭제할 음식의 번호를 입력하세요");
+				 inputNum = userNum();
+				select = "cook_info";
+				select2 = "cook_name";
+				select3 = "cook_no";
+				System.out.println("---------------------------------------------------------");
+				 System.out.println("삭제할 이름을 입력하세요");
+				 inputStr = userInput();
+				 choice = -10;
+				break;
+			 case 2 :
+				 System.out.println("---------------------------------------------------------");
+				 System.out.println("이전화면으로 돌아갑니다");
+				 break;
+			default :
+				System.out.println("---------------------------------------------------------");
+				System.out.println("잘못된 입력입니다");
+				
+			}
+		}
+		try (PreparedStatement ps = conn
+				.prepareStatement("delete ? set ? = ? where ? = ?")) {
+			ps.setString(1, select);
+			ps.setString(2, select2);
+			ps.setString(3, inputStr);
+			ps.setString(4, select3);
+			ps.setInt(5, inputNum);
 			ps.executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();
