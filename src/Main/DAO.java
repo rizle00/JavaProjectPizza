@@ -388,7 +388,7 @@ public class DAO extends Common{
 			}
 		} 
 		System.out.println("---------------------------------------------------------");
-		System.out.println(cDtos.get(cDtos.size()).getCookName()+"이 추가되었습니다.");
+		System.out.println(cDtos.get(cDtos.size()-1).getCookName()+"이 추가되었습니다.");
 		
 	}
 	
