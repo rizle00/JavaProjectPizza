@@ -75,7 +75,7 @@ public class DAO extends Common{
 				if (rs.next()) {
 
 					mDto = new MemberDTO(rs.getString("id"), rs.getString("pw"), rs.getString("nickname"),
-							rs.getString("gender"), rs.getString("createdDay"), rs.getString("address"),
+							rs.getString("gender"), rs.getString("created_Day"), rs.getString("address"),
 							rs.getInt("score"));
 
 					System.out.println("비밀번호를 입력해 주세요");
