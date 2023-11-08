@@ -388,7 +388,7 @@ public class DAO extends Common{
 			}
 		} 
 		System.out.println("---------------------------------------------------------");
-		System.out.println(cDtos.get(cDtos.size()-1).getCookName()+"이 추가되었습니다.");
+		System.out.println(cDtos.get(cDtos.size()).getCookName()+"이 추가되었습니다.");
 		
 	}
 	
@@ -409,6 +409,8 @@ public class DAO extends Common{
 				 System.out.println("---------------------------------------------------------");
 				 System.out.println("수정할 음식의 번호를 입력하세요");
 				 inputNum = userNum();
+				 int recipeNum =cDtos.get(inputNum-1).getCookNum();
+				 inputNum = recipeNum;
 				select = "cook_info";
 				select2 = "cook_name";
 				select3 = "cook_no";
@@ -468,9 +470,10 @@ public class DAO extends Common{
 				 System.out.println("---------------------------------------------------------");
 				 System.out.println("삭제할 레시피의 번호를 입력하세요");
 				 int inputNum = userNum();
+				 int recipeNum =cDtos.get(inputNum-1).getCookNum();
 				try (PreparedStatement ps = conn
 						.prepareStatement("delete from cook_info where cook_no = ?")) {
-					ps.setInt(1, inputNum);
+					ps.setInt(1, recipeNum);
 					ps.executeUpdate();
 					System.out.println("---------------------------------------------------------");
 					 System.out.println(inputNum+"번 레시피 삭제되었습니다");
@@ -578,7 +581,7 @@ public class DAO extends Common{
 		disconnect();
 	}
 
-	public int[] makeRandom(ArrayList<CookDTO> cDtos) {
+	public int[] makeRandom() {
 		r = new Random();
 		int randomNum = r.nextInt(cDtos.size());
 		int [] iArr = new int [cDtos.get(randomNum).recipeList.size()+1];
@@ -594,7 +597,7 @@ public class DAO extends Common{
 	} 
 	
 	public int[] printRandomRecipe() {
-		int[] tempArr = makeRandom(cDtos);
+		int[] tempArr = makeRandom();
 		int randomNum = tempArr[tempArr.length-1];
 		System.out.println("---------------------------------------------------------");
 		System.out.println("문제 나갑니다");
@@ -604,7 +607,7 @@ public class DAO extends Common{
 			System.out.println(" 재료"+(i+1)+" : "+cDtos.get(randomNum).recipeList.get(tempArr[i]).getIngredient());
 		}
 		try {
-			Thread.sleep(3000);
+			Thread.sleep(5000);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
@@ -619,13 +622,13 @@ public class DAO extends Common{
 		int[] tempArr = printRandomRecipe();
 		int randomNum = tempArr[tempArr.length-1];
 		int count = 0;
+		int chance =3;
+		int userScore = mDto.getScore();
+		int score = cDtos.get(randomNum).getScore();
 		for (int i = 0; i < cDtos.get(randomNum).recipeList.size(); i++) {
 			System.out.println("---------------------------------------------------------");
 			System.out.println("답을 입력하세요");
-			int userScore = mDto.getScore();
-			int score = cDtos.get(randomNum).getScore();
 			String str = userInput();
-			
 			if(str.equals(cDtos.get(randomNum).recipeList.get(tempArr[i]).getIngredient())) {
 				System.out.println("정답입니다");
 				count++;
@@ -633,19 +636,21 @@ public class DAO extends Common{
 					userScore += score;
 					System.out.println("---------------------------------------------------------");
 					System.out.println(cDtos.get(randomNum).getCookName()+", 정답입니다");
-					System.out.println("지금까지 "+score+"점 획득하셨습니다");
+					System.out.println(score+"점 획득하셨습니다");
+					System.out.println("지금까지 "+userScore+"점 획득하셨습니다");
 					System.out.println("다음 레시피를 출력합니다");
 					mDto.setScore(userScore);
 				}
 			} else {
 				i--;
-				int chance =3;
+				
 				chance--;
 				System.out.println("---------------------------------------------------------");
 				System.out.println("오답입니다, 10점 감점됩니다\r\n"+chance+"번 남았습니다");
 				score -= 10;
-				if(chance==1) {
+				if(chance==0) {
 					printRemain();
+					break;
 				}
 			}
 		}if(mDto.getChance()==0) {
@@ -660,11 +665,14 @@ public class DAO extends Common{
 		int count = mDto.getChance();
 		count--;
 		mDto.setChance(count);
-		System.out.println("---------------------------------------------------------");
-		System.out.println("3번 틀리셨습니다, 이번 레시피는 실패입니다");
-		System.out.println("기회는 "+count+"번 남았습니다");
-		System.out.println("지금까지 "+mDto.getScore()+"점 획득하셨습니다");
-		System.out.println("다음 레시피를 출력합니다");
+		if(count!=0) {
+			System.out.println("---------------------------------------------------------");
+			System.out.println("3번 틀리셨습니다, 이번 레시피는 실패입니다");
+			System.out.println("기회는 "+count+"번 남았습니다");
+			System.out.println("지금까지 "+mDto.getScore()+"점 획득하셨습니다");
+			System.out.println("다음 레시피를 출력합니다");
+		}
+		
 		
 	}
 	
