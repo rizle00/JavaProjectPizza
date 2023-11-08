@@ -80,7 +80,6 @@ public class DAO extends Common{
 
 					System.out.println("비밀번호를 입력해 주세요");
 					String pw = userInput();
-					disconnect();
 					return pw;
 				} else {
 					System.out.println("---------------------------------------------------------");
@@ -97,7 +96,6 @@ public class DAO extends Common{
 							System.out.println("잘못된 입력입니다");
 						}
 					}// 내부 와일 끝
-					disconnect();
 				}// 엘스문
 			} catch (SQLException e) {
 				e.printStackTrace();
@@ -112,15 +110,18 @@ public class DAO extends Common{
 			if (pw.equals(mDto.getPw())) {
 				System.out.println("---------------------------------------------------------");
 				System.out.println("로그인 완료!!!");
+				disconnect();
 				mDto.setLogin(true);
 				break;
 			} else {
 				System.out.println("---------------------------------------------------------");
 				System.out.println("아이디&비번오류!! 다시 로그인해주세요!!!");
+				continue;
 			}
 		} return pw;
 	}
 	public void selectUserInfo() {
+		connect();
 		while(mDto.isLogin()) {
 			System.out.println("---------------------------------------------------------");
 			System.out.println("메뉴를 선택해주세요");
@@ -143,6 +144,7 @@ public class DAO extends Common{
 				System.out.println("잘못 된 입력입니다");
 			}
 			if(choice==3) {
+				disconnect();
 				break;
 			}
 		}
@@ -237,10 +239,10 @@ public class DAO extends Common{
 			}
 			
 			try {
-				PreparedStatement ps = conn.prepareStatement("UPDATE MEMBER SET ? = ? WHERE ID=?");
-				ps.setString(1, change);
-				ps.setString(2, str);
-				ps.setString(3, mDto.getId());    
+				PreparedStatement ps = conn.prepareStatement("UPDATE MEMBER SET "+change+" = ? WHERE ID=?");
+//				ps.setString(0, change); => '' 가 붙음 set은..
+				ps.setString(1, str);
+				ps.setString(2, mDto.getId());    
 				ps.executeUpdate();
 //				System.out.println(conn.getAutoCommit());
 			} catch (SQLException e) {
@@ -263,7 +265,6 @@ public class DAO extends Common{
 		if(iData.equals("y")) {
 			try {
 				PreparedStatement ps = conn.prepareStatement("DELETE FROM MEMBER WHERE ID = ? AND PW = ?");
-
 				ps.setString(1, mDto.getId());
 				ps.setString(2, mDto.getPw());
 				ps.executeUpdate();
@@ -271,7 +272,6 @@ public class DAO extends Common{
 				System.out.println(mDto.getId()+"님 탈퇴되었습니다");
 				break;
 			} catch (SQLException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 				}
 		}else if(iData.equals("n")) {
@@ -429,12 +429,12 @@ public class DAO extends Common{
 				
 			}
 			try (PreparedStatement ps = conn
-					.prepareStatement("update ? set ? = ? where ? = ?")) {
-				ps.setString(1, select);
-				ps.setString(2, select2);
-				ps.setString(3, inputStr);
-				ps.setString(4, select3);
-				ps.setInt(5, inputNum);
+					.prepareStatement("update "+ select + " set "+ select2 +" = ? where "+ select3 +" = ?")) {
+//				ps.setString(1, select);
+//				ps.setString(2, select2);
+				ps.setString(1, inputStr);
+//				ps.setString(4, select3);
+				ps.setInt(2, inputNum);
 				ps.executeUpdate();
 			} catch (SQLException e) {
 				e.printStackTrace();
