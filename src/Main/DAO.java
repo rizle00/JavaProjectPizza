@@ -397,26 +397,28 @@ public class DAO extends Common{
 		String select2 =null;// 음식이냐 재료냐2
 		String inputStr =null;
 		String select3 =null;// 음식번호냐 재료번호냐
+		String select4 =null;// 음식번호냐 재료번호냐
 		int inputNum =0 ;
-		
-		
 		while(mDto.isLogin()) {
 			System.out.println("---------------------------------------------------------");
-			System.out.println("1 - 음식 이름 수정 / 2 - 재료 수정 / 3 - 이전화면으로");
+			 System.out.println("수정할 음식의 번호를 입력하세요, 0 - 이전화면으로");
+			 inputNum = userNum();
+			 if(inputNum ==0) {
+				 break;
+			 }
+			 int cookNum =cDtos.get(inputNum-1).getCookNum();
+			 inputNum = cookNum;
+			System.out.println("1 - 음식 이름 수정 / 2 - 음식 재료 수정 ");
 			int choice = userNum();
 			switch(choice) {
 			 case 1:
 				 System.out.println("---------------------------------------------------------");
-				 System.out.println("수정할 음식의 번호를 입력하세요");
-				 inputNum = userNum();
-				 int recipeNum =cDtos.get(inputNum-1).getCookNum();
-				 inputNum = recipeNum;
+				 System.out.println("수정할 이름을 입력하세요");
+				 inputStr = userInput();
 				select = "cook_info";
 				select2 = "cook_name";
 				select3 = "cook_no";
-				System.out.println("---------------------------------------------------------");
-				 System.out.println("수정할 이름을 입력하세요");
-				 inputStr = userInput();
+				select4 = "";
 				break;
 			 case 2 :
 				 System.out.println("---------------------------------------------------------");
@@ -424,33 +426,29 @@ public class DAO extends Common{
 				 inputNum = userNum();
 				 select = "RECIPE_INFO";
 				 select2 = "INGREDIENT";
-				 select3 = "RECIPE_NO";
+				 select3 = "Cook_NO";
+				 select4 = "and recipe_no = "+inputNum;
 				 System.out.println("---------------------------------------------------------");
 				 System.out.println("수정할 재료를 입력하세요");
 				 inputStr = userInput();
 				 break;
-			 case 3:
-				 System.out.println("---------------------------------------------------------");
-				 System.out.println("이전화면으로 돌아갑니다");
-				 break;
+				 
 			default :
 				System.out.println("---------------------------------------------------------");
 				System.out.println("잘못된 입력입니다");
 				
 			}
 			try (PreparedStatement ps = conn
-					.prepareStatement("update "+ select + " set "+ select2 +" = ? where "+ select3 +" = ?")) {
+					.prepareStatement("update "+ select + " set "+ select2 +" = ? where "+ select3 +" = ? "+select4)) {
 //				ps.setString(1, select);
 //				ps.setString(2, select2);
 				ps.setString(1, inputStr);
 //				ps.setString(4, select3);
 				ps.setInt(2, inputNum);
 				ps.executeUpdate();
+				System.out.println("수정 되었습니다");
 			} catch (SQLException e) {
 				e.printStackTrace();
-			}
-			if(choice==3) {
-				break;
 			}
 		}
 		
@@ -656,6 +654,7 @@ public class DAO extends Common{
 		}if(mDto.getChance()==0) {
 			gameEnd();
 			updateScore(mDto.getId(), mDto.getScore());
+			printScore();
 			break;
 		}
 		}
