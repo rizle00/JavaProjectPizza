@@ -44,7 +44,7 @@ public class JghDAO extends Common implements Main {
 			System.out.println("메뉴를 선택해주세요!");
 
 			
-			while (true) {
+			
 					System.out.println("1 - 회원정보관리 / 2 - 점수출력 / 3- 레시피 추가 / 4 -  게임시작  /  5 - 로그아웃");
 //					int tempN = Integer.parseInt(sc.nextLine());
 					int tempN = userNum();
@@ -68,7 +68,7 @@ public class JghDAO extends Common implements Main {
 					default :
 						System.out.println("유효한 값이 아닙니다.");
 					}
-			}//와일문 끝
+			
 		}
 
 		@Override
