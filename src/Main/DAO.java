@@ -14,7 +14,7 @@ public class DAO extends Common{
 	ArrayList<CookDTO> cDtos =  new ArrayList<>();
 //	ArrayList<RecipeDTO> recipeList =  new ArrayList<>();
 	public void select() {
-		System.out.println("hello world! 로그인하려면 1, 종료하려면 0을 입력해주세요!");
+		System.out.println("Let's Cook Together!!! 로그인하려면 1, 종료하려면 0을 입력해주세요!");
 		while (true) {
 			String tempStr = userInput();
 			String iData = null;
