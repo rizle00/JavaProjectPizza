@@ -33,6 +33,7 @@ public class DAO extends Common{
 	
 	public void selectMode() {// 로그인 후 모드 선택,로그아웃, 점수출력, 레시피추가, 게임시작
 		loadCooks();
+		loadRecipe();
 		printCooks();
 		while (mDto.isLogin()) {
 			
@@ -299,15 +300,14 @@ public class DAO extends Common{
 			int choice = userNum();
 			switch(choice) {
 			case 1:
-				printCooks();
+				
 				addRecipe();
 				break;
 			case 2:
-				printCooks();
 				modifyRecipe();
 				break;
 			case 3:
-				printCooks();
+				
 				deleteRecipe();
 				break;
 			case 4:
@@ -325,40 +325,42 @@ public class DAO extends Common{
 		}
 	}
 	
+	public boolean checkCook(String inputStr) {
+		for (int i = 0; i < cDtos.size() - 1; i++) {
+			if (cDtos.get(i).getCookName().equals(inputStr)) {
+				System.out.println("---------------------------------------------------------");
+				System.out.println("중복된 레시피 이름입니다.");
+				System.out.println("다른 이름을 입력해주세요.");
+				return true;
+			} 
+		}return false;
+	}
+	
 	public int addCook() {
 		String cookName = null;
-		int score = 0;
 		int count = 0;
 		while (mDto.isLogin()) {
+			printCooks();
 			System.out.println("---------------------------------------------------------");
 			System.out.println("레시피를 추가합니다");
 			System.out.println("추가하실 레시피 이름을 입력해주세요.");
 			cookName = userInput();
-			for (int i = 0; i < cDtos.size() - 1; i++) {
-				if (cDtos.get(i).getCookName().equals(cookName)) {
-					System.out.println("---------------------------------------------------------");
-					System.out.println("중복된 레시피 이름입니다.");
-					System.out.println("다른 레시피 이름을 입력해주세요.");
-					cookName = null;
-					break;
-				} else {
-					count++;
-				}
-			}
-			if (cookName == null) {
+			
+			boolean isExistedCook = checkCook(cookName);
+			if (isExistedCook) {
 				continue;
 			}
 			
-			while(score==0) {
+			while(count==0) {
 				System.out.println("---------------------------------------------------------");
 				System.out.println("몇 개의 재료를 입력하실건가요? (최소 4개 이상 선택) ");
-				score = userNum();
-				if(score>=4)
+				count = userNum();
+				if(count>=4)
 					break;
-				while(score<4) {
+				while(count<4) {
 				System.out.println("---------------------------------------------------------");
 				System.out.println("재료의 개수를 4개이상 입력해주세요.");
-				score=0;
+				count=0;
 				break;
 				}
 				
@@ -369,26 +371,22 @@ public class DAO extends Common{
 						.prepareStatement("INSERT INTO COOK_INFO ( COOK_NO, COOK_NAME , SCORE, create_by) "
 								+ "SELECT MAX(COOK_NO) +1 , ?  , ? , ?  FROM COOK_INFO");
 				ps.setString(1, cookName);
-				ps.setInt(2, (score * 20) + 20);
+				ps.setInt(2, (count * 20) + 20);
 				ps.setString(3, mDto.getNickname());
 				ps.executeUpdate();
 				
 				int cookNum =cDtos.get(cDtos.size()-1).getCookNum()+1;
-				cDtos.add(new CookDTO(cookName, mDto.getNickname(), cookNum, score, (score*20)+20));
+				cDtos.add(new CookDTO(cookName, mDto.getNickname(), cookNum, count, (count*20)+20));
 			} catch (SQLException e) {
 				e.printStackTrace();
 			}
-			if(score>=4)
+			if(count>=4)
 				break;
-		}return score;
+		}return count;
 		}
-
-		
-	
 
 	public void addRecipe() {
 		int inputNum = addCook();
-		cDtos.get(cDtos.size()-1).recipeList = new ArrayList<>();
 		for (int i = 0; i < inputNum; i++) {
 			System.out.println("---------------------------------------------------------");
 			System.out.println(i+1+"번 재료를 입력해주세요.");
@@ -421,30 +419,33 @@ public class DAO extends Common{
 		String select2 =null;// 음식이냐 재료냐2
 		String inputStr =null;
 		String select3 =null;// 음식번호냐 재료번호냐
-		String select4 =null;// 음식번호냐 재료번호냐
 		int inputNum =0 ;
-		while(mDto.isLogin()) {
+		point : while(mDto.isLogin()) {
+			printCooks();
 			System.out.println("---------------------------------------------------------");
 			 System.out.println("수정할 음식의 번호를 입력하세요, 0 - 이전화면으로");
 			 inputNum = userNum();
 			 if(inputNum ==0) {
 				 break;
 			 }
-			 int cookNum =cDtos.get(inputNum-1).getCookNum();
-			 inputNum = cookNum;
-			System.out.println("1 - 음식 이름 수정 / 2 - 음식 재료 수정 ");
+			 boolean isExistedCook = false;
+				
+			 while(!isExistedCook) {
+			System.out.println("1 - 음식 이름 수정 / 2 - 음식 재료 수정 / 3 - 이전화면으로");
 			int choice = userNum();
 			switch(choice) {
 			 case 1:
 				 System.out.println("---------------------------------------------------------");
 				 System.out.println("수정할 이름을 입력하세요");
 				 inputStr = userInput();
+				  isExistedCook = checkCook(inputStr);
+					if (isExistedCook) {
+						continue;
+					}
 				select = "cook_info";
 				select2 = "cook_name";
-				select3 = "cook_no";
-				select4 = "";
-				cDtos.set(inputNum-1, new CookDTO(inputStr, mDto.getNickname(), cDtos.get(inputNum-1).getCookNum(),
-						cDtos.get(inputNum-1).getCount(), cDtos.get(inputNum-1).getScore()));
+				select3 = "";
+				cDtos.get(inputNum-1).setCookName(inputStr);
 				break;
 			 case 2 :
 				 System.out.println("---------------------------------------------------------");
@@ -452,31 +453,31 @@ public class DAO extends Common{
 				 int inputNum1 = userNum();
 				 select = "RECIPE_INFO";
 				 select2 = "INGREDIENT";
-				 select3 = "Cook_NO";
-				 select4 = "and recipe_no = "+inputNum;
+				 select3 = "and recipe_no = "+inputNum;
 				 System.out.println("---------------------------------------------------------");
 				 System.out.println("수정할 재료를 입력하세요");
 				 inputStr = userInput();
-				 cDtos.get(inputNum-1).recipeList.set(inputNum1-1, new RecipeDTO(inputNum1-1, cDtos.get(inputNum-1).getCookNum(), inputStr));
+				 cDtos.get(inputNum-1).recipeList.get(inputNum1-1).setIngredient(inputStr);
 				 break;
 				 
+			 case 3:
+				 break point;
 			default :
 				System.out.println("---------------------------------------------------------");
 				System.out.println("잘못된 입력입니다");
 				
 			}
 			try (PreparedStatement ps = conn
-					.prepareStatement("update "+ select + " set "+ select2 +" = ? where "+ select3 +" = ? "+select4)) {
-//				ps.setString(1, select);
-//				ps.setString(2, select2);
+					.prepareStatement("update "+ select + " set "+ select2 +" = ? where Cook_no = ? "+select3)) {
 				ps.setString(1, inputStr);
-//				ps.setString(4, select3);
+				 int cookNum =cDtos.get(inputNum-1).getCookNum();
+				 inputNum = cookNum;
 				ps.setInt(2, inputNum);
 				ps.executeUpdate();
-				
 				System.out.println("수정 되었습니다");
 			} catch (SQLException e) {
 				e.printStackTrace();
+			}
 			}
 		}
 		
@@ -487,6 +488,7 @@ public class DAO extends Common{
 	public void deleteRecipe() {
 		
 		while(mDto.isLogin()) {
+			printCooks();
 			System.out.println("---------------------------------------------------------");
 			System.out.println("1 - 레시피 삭제  2 - 이전화면으로");
 			int choice = userNum();
@@ -527,7 +529,7 @@ public class DAO extends Common{
 		System.out.println("게임을 시작합니다!");
 		
 		selectLevel();
-		loadRecipe(mDto.getLevel());
+		selectRecipe(mDto.getLevel());
 		checkAnswer();
 	}
 
@@ -562,7 +564,7 @@ public class DAO extends Common{
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		disconnect();
+//		disconnect();
 	}
 	
 	public void printCooks() {
@@ -574,18 +576,11 @@ public class DAO extends Common{
 		}
 	}
 	
-	public void loadRecipe(int level){
-		int range = 0;
-		if(level ==1) {
-			range = 6;
-		} else if(level ==2) {
-			range = 8;
-		} else {
-			range = 15;
-		}
-		connect();
+	public void loadRecipe(){
+
+//		connect();
 		for (int i = 0; i < cDtos.size()-1; i++) {
-			 if(cDtos.get(i).getCount()<=range) {
+//			 
 				 try {
 						PreparedStatement ps = conn.prepareStatement("SELECT recipe_no, cook_no, "
 								+ "INGREDIENT FROM "
@@ -602,8 +597,25 @@ public class DAO extends Common{
 					e.printStackTrace();
 				} 
 			 }
-		}
+	
 		disconnect();
+	}
+
+	public void selectRecipe(int level) {
+		int range = 0;
+		if(level ==1) {
+			range = 6;
+		} else if(level ==2) {
+			range = 8;
+		} else {
+			range = 15;
+		}
+		for (int i = 0; i < cDtos.size()-1; i++) {
+			if(cDtos.get(i).getCount()>range) {	
+				cDtos.remove(i);
+			}
+		}
+		
 	}
 
 	public int[] makeRandom() {
@@ -649,6 +661,7 @@ public class DAO extends Common{
 		int count = 0;
 		int chance =3;
 		int userScore = mDto.getScore();
+		int tempScore =0;
 		int score = cDtos.get(randomNum).getScore();
 		for (int i = 0; i < cDtos.get(randomNum).recipeList.size(); i++) {
 			System.out.println("---------------------------------------------------------");
@@ -658,13 +671,12 @@ public class DAO extends Common{
 				System.out.println("정답입니다");
 				count++;
 				if(count==cDtos.get(randomNum).recipeList.size()) {
-					userScore += score;
+					tempScore += score;
 					System.out.println("---------------------------------------------------------");
 					System.out.println(cDtos.get(randomNum).getCookName()+", 정답입니다");
 					System.out.println(score+"점 획득하셨습니다");
-					System.out.println("지금까지 "+userScore+"점 획득하셨습니다");
+					System.out.println("지금까지 "+tempScore+"점 획득하셨습니다");
 					System.out.println("다음 레시피를 출력합니다");
-					mDto.setScore(userScore);
 				}
 			} else {
 				i--;
@@ -680,7 +692,10 @@ public class DAO extends Common{
 			}
 		}if(mDto.getChance()==0) {
 			gameEnd();
-			updateScore(mDto.getId(), mDto.getScore());
+			if(tempScore>mDto.getScore()) {
+				updateScore(mDto.getId(), tempScore);
+				
+			}
 			printScore();
 			break;
 		}
@@ -706,8 +721,8 @@ public class DAO extends Common{
 		connect();
 		try {
 			PreparedStatement ps = conn.prepareStatement("update member set score =? where id = ?");
-			ps.setString(1, id );
-			ps.setInt(2, score );
+			ps.setInt(1, score );
+			ps.setString(2, id );
 			ps.executeQuery();
 		} catch (SQLException e) {
 			e.printStackTrace();
