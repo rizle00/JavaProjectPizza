@@ -13,11 +13,20 @@ public class InterfaceDAO {
 	public static class Common{
 		protected Scanner sc;
 		protected Random r;
-		 protected Connection conn;// 상속했는데 스태틱이 필요함?
+		protected Connection conn;// 상속했는데 스태틱이 필요함?
+		 //스캐너 처리
 		protected String userInput() {
 			sc =  new Scanner(System.in);
-			String inputStr = sc.nextLine();
-			return inputStr;
+			while(true) {
+				String inputStr = sc.nextLine();
+				if(!inputStr.isEmpty()) {
+					
+					return inputStr;
+				}else {
+					System.out.println("유효하지 않은 값입니다");
+				}
+			}
+			
 		}
 		protected int userNum() {
 			sc =  new Scanner(System.in);
@@ -30,7 +39,9 @@ public class InterfaceDAO {
 				System.out.println("유효하지 않은 값입니다");
 			}return inputNum;
 		}
-
+		protected void closeScanner() {
+			sc.close();
+		}
 		protected void connect() {
 			String url = "jdbc:oracle:thin:@118.40.91.135:1521:xe";
 			String user = "ATEAM";
